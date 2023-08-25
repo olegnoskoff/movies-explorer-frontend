@@ -1,0 +1,50 @@
+.navtab {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.navtab__link-signup,
+.navtab__link-signin {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  text-decoration: none;
+  transition: opacity 0.7s linear;
+  cursor: pointer;
+}
+
+.navtab__link-signup {
+  color: #000;
+  text-align: right;
+}
+
+.navtab__link-signin {
+  color: #fff;
+  background: #3456f3;
+  padding: 5px 12px;
+  border-radius: 3px;
+}
+
+.navtab__link-signin:hover,
+.navtab__link-signup:hover {
+  opacity: 0.8;
+}
+
+@media screen and (min-width: 768px) {
+  .navtab {
+    gap: 30px;
+  }
+
+  .navtab__link-signup,
+  .navtab__link-signin {
+    font-size: 12px;
+  }
+
+  .navtab__link-signin {
+    padding: 8px 20px;
+  }
+}
