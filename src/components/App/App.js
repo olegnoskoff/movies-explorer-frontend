@@ -17,7 +17,7 @@ import Login from "../Login/Login";
 import Movies from "../Movies/Movies";
 import SavedMovies from "../SavedMovies/SavedMovies";
 import { getUser, register, login } from "../../utils/MainApi";
-import ErrorStatus from "../ErrorBanner/ErrorStatus";
+import ErrorStatus from "../ErrorStatus/ErrorStatus";
 
 function InnerApp() {
   const [loggedIn, setLoggedIn] = useState(false);
