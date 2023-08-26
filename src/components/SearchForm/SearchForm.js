@@ -9,7 +9,7 @@ const SearchForm = () => {
   };
 
   return (
-    <form className="search">
+    <section className="search">
       <div className="search__wrapper">
         <div className="search__area">
           <input
@@ -32,7 +32,7 @@ const SearchForm = () => {
           <p className="search__handle-text">Короткометражки</p>
         </div>
       </div>
-    </form>
+    </section>
   );
 };
 

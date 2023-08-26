@@ -64,63 +64,68 @@ const Profile = () => {
 
   return (
     <section className="profile">
-      <form className="profile__form">
-        <div className="profile__info">
-          <h2 className="profile__title">Привет, {name}!</h2>
-          <div className="profile__input-name">
-            <p className="profile__name">Имя</p>
-            <input
-              className="profile__input"
-              type="text"
-              placeholder="Введите имя"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              disabled={!isEditing}
-              required
-            />
+      <main className="profile__main">
+        <form className="profile__form">
+          <div className="profile__info">
+            <h1 className="profile__title">Привет, {name}!</h1>
+            <div className="profile__input-name">
+              <p className="profile__name">Имя</p>
+              <input
+                className="profile__input"
+                type="text"
+                placeholder="Введите имя"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={!isEditing}
+                required
+              />
+            </div>
+            <div className="profile__input-email">
+              <p className="profile__email">E-mail</p>
+              <input
+                className="profile__input"
+                type="email"
+                placeholder="Введите Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={!isEditing}
+                required
+              />
+            </div>
           </div>
-          <div className="profile__input-email">
-            <p className="profile__email">E-mail</p>
-            <input
-              className="profile__input"
-              type="email"
-              placeholder="Введите Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={!isEditing}
-              required
-            />
+          <div className="profile__btns">
+            {isEditing ? (
+              <button
+                onClick={handleSaveButtonClick}
+                className="profile__btn-save"
+                type="submit"
+              >
+                Сохранить
+              </button>
+            ) : (
+              <>
+                {errorMessage && (
+                  <p className="profile__error">{errorMessage}</p>
+                )}
+                <button
+                  onClick={handleEditButtonClick}
+                  className="profile__btn-edit"
+                  type="button"
+                >
+                  Редактировать
+                </button>
+                <button
+                  className="profile__btn-escape"
+                  type="button"
+                  onClick={handleSignOut}
+                >
+                  Выйти из аккаунта
+                </button>
+              </>
+            )}
           </div>
-        </div>
-        <div className="profile__btns">
-          {isEditing ? (
-            <button
-              onClick={handleSaveButtonClick}
-              className="profile__btn-save"
-              type="submit"
-            >
-              Сохранить
-            </button>
-          ) : (
-            <>
-              {errorMessage && <p className="profile__error">{errorMessage}</p>}
-              <button
-                onClick={handleEditButtonClick}
-                className="profile__btn-edit"
-              >
-                Редактировать
-              </button>
-              <button
-                className="profile__btn-escape"
-                type="button"
-                onClick={handleSignOut}
-              >
-                Выйти из аккаунта
-              </button>
-            </>
-          )}
-        </div>
-      </form>
+        </form>
+      </main>
     </section>
   );
 };

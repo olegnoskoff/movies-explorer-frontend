@@ -47,7 +47,7 @@ const Register = ({ onRegister }) => {
               alt="Логотип регистрации"
             />
           </NavLink>
-          <h2 className="register__title">Добро пожаловать!</h2>
+          <h1 className="register__title">Добро пожаловать!</h1>
           <FormField
             title="Имя"
             value={name}
@@ -55,6 +55,8 @@ const Register = ({ onRegister }) => {
             onChange={(e) => setName(e.target.value)}
             placeholder="Введите имя"
             type="text"
+            minLength={3} // Минимальная длина для имени
+            maxLength={20} // Максимальная длина для имени
           />
           <FormField
             title="E-mail"
@@ -71,10 +73,12 @@ const Register = ({ onRegister }) => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Введите пароль"
             type="password"
+            minLength={8} // Минимальная длина для пароля
+            maxLength={20} // Максимальная длина для пароля
           />
         </div>
         <div className="register__btn-container">
-          <button className="register__button" type="submit">
+          <button className="register__button" type="button">
             Зарегистрироваться
           </button>
           <p className="register__text">
@@ -89,7 +93,16 @@ const Register = ({ onRegister }) => {
   );
 };
 
-const FormField = ({ title, value, error, onChange, placeholder, type }) => (
+const FormField = ({
+  title,
+  value,
+  error,
+  onChange,
+  placeholder,
+  type,
+  minLength,
+  maxLength,
+}) => (
   <>
     <p className="register__input-title">{title}</p>
     <input
@@ -98,6 +111,8 @@ const FormField = ({ title, value, error, onChange, placeholder, type }) => (
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      minLength={minLength}
+      maxLength={maxLength}
       required
     />
     <p className="register__error">{error}</p>

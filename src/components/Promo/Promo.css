@@ -32,11 +32,18 @@
 }
 
 .promo__links {
+  background-color: #f5f5f5;
+  padding: 26px 0;
+
+}
+
+.promo__list {
   display: grid;
   grid-template-columns: repeat(3, max-content);
-  background-color: #f5f5f5;
-  padding: 25px 0;
-  gap: 24px;
+  gap: 40px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .promo__link {
@@ -69,13 +76,11 @@
     letter-spacing: -2px;
   }
 
-  .promo__links {
-    padding: 24px 0;
-    gap: 40px;
-  }
-
   .promo__link {
     font-size: 13px;
+  }
+  .promo__links {
+    padding: 26px 0;
   }
 }
 

@@ -35,11 +35,11 @@ function MoviesCard({ movie }) {
         <img
           className="card__image"
           src={MoviePictures}
-          alt="Заставкаы фильма"
+          alt="Постер фильма"
         />
       </a>
       <div className="card__element">
-        <p className="card__title">{movie.title}</p>
+        <h2 className="card__title">{movie.title}</h2>
         <div className="card__buttons">{renderButton()}</div>
       </div>
       <p className="card__duration">{movie.duration}</p>

@@ -13,10 +13,10 @@ const AboutMe = () => {
           alt="Фото профиля Олега"
         />
         <article className="about__profile-text">
-          <h2 className="about__profile-text-name">Олег</h2>
-          <h3 className="about__profile-text-group">
+          <h3 className="about__profile-text-name">Олег</h3>
+          <h4 className="about__profile-text-group">
             Фронтенд-разработчик, 30 годиков
-          </h3>
+          </h4>
           <p className="about__profile-text-description">
             Я родился и живу в Саратове, закончил факультет экономики СГУ. У
             меня есть жена и дочь. Я люблю слушать музыку, а ещё увлекаюсь

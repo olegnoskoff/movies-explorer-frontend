@@ -51,6 +51,7 @@
   padding-top: 50px;
   list-style: none;
   display: grid;
+  grid-template-columns: repeat(2, max-content);
   gap: 10px;
   justify-content: center;
 }

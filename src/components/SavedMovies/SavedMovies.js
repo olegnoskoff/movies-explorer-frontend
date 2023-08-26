@@ -33,10 +33,12 @@ const SavedMovies = () => {
   });
 
   return (
-    <section className="savedmovies">
-      <SearchForm onSearch={handleSearch} onFilter={handleFilter} />
-      {loading ? <Preloader /> : <MoviesCardList movies={filteredMovies} />}
-    </section>
+    <main className="savedmovies">
+      <section className="savedmovies__content">
+        <SearchForm onSearch={handleSearch} onFilter={handleFilter} />
+        {loading ? <Preloader /> : <MoviesCardList movies={filteredMovies} />}
+      </section>
+    </main>
   );
 };
 

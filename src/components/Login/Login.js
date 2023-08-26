@@ -44,7 +44,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login">
+    <section className="login">
       <form className="login__form" onSubmit={handleSubmit}>
         <div className="login__container">
           <NavLink to="/" className="login__logo-link">
@@ -54,30 +54,28 @@ const Login = () => {
               alt="Лого регистрации"
             />
           </NavLink>
-          <h2 className="login__title">Рады видеть!</h2>
-          <p className="login__input-title">E-mail</p>
-          <input
-            className={`login__input ${emailError && "login__input_error"}`}
-            type="email"
-            placeholder="Введите E-mail"
+          <h1 className="login__title">Рады видеть!</h1>
+          <FormField
+            title="E-mail"
             value={email}
+            error={emailError}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            placeholder="Введите E-mail"
+            type="email"
           />
-          <span className="login__error">{emailError}</span>
-          <p className="login__input-title">Пароль</p>
-          <input
-            className={`login__input ${passwordError && "login__input_error"}`}
-            type="password"
-            placeholder="Введите пароль"
+          <FormField
+            title="Пароль"
             value={password}
+            error={passwordError}
             onChange={(e) => setPassword(e.target.value)}
-            required
+            placeholder="Введите пароль"
+            type="password"
+            minLength={8} // Минимальная длина для пароля
+            maxLength={20} // Максимальная длина для пароля
           />
-          <span className="login__error">{passwordError}</span>
         </div>
         <div className="login__button-container">
-          <button className="login__button" type="submit">
+          <button className="login__button" type="button">
             Войти
           </button>
           <p className="login__text">
@@ -89,8 +87,34 @@ const Login = () => {
         </div>
         {tokenError && <span className="login__error">{tokenError}</span>}
       </form>
-    </div>
+    </section>
   );
 };
+
+const FormField = ({
+  title,
+  value,
+  error,
+  onChange,
+  placeholder,
+  type,
+  minLength,
+  maxLength,
+}) => (
+  <>
+    <p className="login__input-title">{title}</p>
+    <input
+      className={`login__input ${error && "login__input_error"}`}
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      minLength={minLength}
+      maxLength={maxLength}
+      required
+    />
+    <span className="login__error">{error}</span>
+  </>
+);
 
 export default Login;

@@ -1,4 +1,3 @@
-/* Base styles */
 .navigation {
   display: flex;
   flex-direction: row;
@@ -32,7 +31,6 @@
   transition: all 1s linear;
 }
 
-/* Menu visibility styles */
 .navigation__menu_visible {
   visibility: visible;
   width: 100%;
@@ -41,7 +39,6 @@
   background-color: #fff;
 }
 
-/* Links container */
 .navigation__links-container {
   display: flex;
   flex-direction: column;
@@ -49,14 +46,14 @@
   background-color: transparent;
 }
 
-/* Close button */
 .navigation__menu-close-btn {
   display: flex;
   margin: 0;
   padding: 0;
   width: 22px;
   height: 22px;
-  background: transparent url('../../images/header-menu-btn-close.svg') center center / 32px no-repeat;
+  background: transparent url("../../images/header-menu-btn-close.svg") center
+    center / 32px no-repeat;
   align-self: flex-end;
   border: none;
   outline: none;
@@ -67,7 +64,6 @@
   cursor: pointer;
 }
 
-/* Links list */
 .navigation__links-list {
   flex-direction: column;
   margin: 0;
@@ -80,11 +76,10 @@
   padding-bottom: 24px;
 }
 
-/* Link styles */
 .navigation__link {
   color: #000;
   text-align: center;
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings: "clig" off, "liga" off;
   font-family: Inter, Arial, sans-serif;
   font-size: 18px;
   font-style: normal;
@@ -101,9 +96,8 @@
   cursor: pointer;
 }
 
-/* Active link indicator */
 .navigation__link_active::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: -7px;
@@ -113,7 +107,6 @@
   transition: width 0.3s ease-in-out;
 }
 
-/* Profile link */
 .navigation__link-profile {
   color: #000;
   font-family: Inter, Arial, sans-serif;
@@ -127,7 +120,7 @@
   height: 32px;
   margin: 0 auto;
   border-radius: 20px;
-  border: solid rgba(170, 170, 170, 0.20);
+  border: solid rgba(170, 170, 170, 0.2);
   background-color: #fafafa;
   text-decoration: none;
 }
@@ -136,13 +129,13 @@
   margin-right: 7px;
 }
 
-/* Menu button */
 .navigation__menu-btn {
   display: flex;
   margin-left: auto;
   width: 40px;
   height: 38px;
-  background: transparent url('../../images/header-menu-button.svg') center center / cover no-repeat;
+  background: transparent url("../../images/header-menu-button.svg") center center /
+    cover no-repeat;
   border: none;
   outline: none;
   padding: 0;
@@ -157,7 +150,6 @@
   display: none;
 }
 
-/* Media queries */
 @media screen and (min-width: 375px) {
   .navigation__menu-content {
     width: 90%;

@@ -26,10 +26,12 @@ const Movies = () => {
   });
 
   return (
-    <section className="movies">
-      <SearchForm onSearch={handleSearch} onFilter={handleFilter} />
-      {loading ? <Preloader /> : <MoviesCardList movies={filteredMovies} />}
-    </section>
+    <main className="movies"> 
+      <section className="movies__content">
+        <SearchForm onSearch={handleSearch} onFilter={handleFilter} />
+        {loading ? <Preloader /> : <MoviesCardList movies={filteredMovies} />}
+      </section>
+    </main>
   );
 };
 

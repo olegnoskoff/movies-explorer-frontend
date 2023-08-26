@@ -8,20 +8,34 @@ const Promo = ({ aboutProjectRef, techRef, aboutMeRef, scrollToRef }) => {
           Учебный проект студента факультета Веб-разработки.
         </h1>
       </div>
-      <div className="promo__links">
-        <button
-          className="promo__link"
-          onClick={() => scrollToRef(aboutProjectRef)}
-        >
-          О проекте
-        </button>
-        <button className="promo__link" onClick={() => scrollToRef(techRef)}>
-          Технологии
-        </button>
-        <button className="promo__link" onClick={() => scrollToRef(aboutMeRef)}>
-          Студент
-        </button>
-      </div>
+      <nav className="promo__links">
+        <ul className="promo__list">
+          <li>
+            <button
+              className="promo__link"
+              onClick={() => scrollToRef(aboutProjectRef)}
+            >
+              О проекте
+            </button>
+          </li>
+          <li>
+            <button
+              className="promo__link"
+              onClick={() => scrollToRef(techRef)}
+            >
+              Технологии
+            </button>
+          </li>
+          <li>
+            <button
+              className="promo__link"
+              onClick={() => scrollToRef(aboutMeRef)}
+            >
+              Студент
+            </button>
+          </li>
+        </ul>
+      </nav>
     </section>
   );
 };
