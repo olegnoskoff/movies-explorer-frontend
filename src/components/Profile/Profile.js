@@ -8,7 +8,11 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const navigate = useNavigate();
+
+  const MIN_NAME_LENGTH = 3;
+  const MAX_NAME_LENGTH = 12;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -56,33 +60,55 @@ const Profile = () => {
   const handleSignOut = async () => {
     try {
       await signout();
-      navigate("/signin");
+      navigate(-1); //возвращает на предыдущую страницу из истории
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <section className="profile">
-      <main className="profile__main">
+    <main>
+      <section className="profile">
         <form className="profile__form">
           <div className="profile__info">
             <h1 className="profile__title">Привет, {name}!</h1>
-            <div className="profile__input-name">
-              <p className="profile__name">Имя</p>
+            <div
+              className={`profile__input-name ${
+                isInputFocused ? "focused" : ""
+              }`}
+            >
+              <label className="profile__name" htmlFor="name">
+                Имя
+              </label>
               <input
+                id="name"
                 className="profile__input"
                 type="text"
                 placeholder="Введите имя"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value.length <= MAX_NAME_LENGTH) {
+                    setName(e.target.value);
+                  }
+                }}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
                 disabled={!isEditing}
                 required
               />
+              {(name.length < MIN_NAME_LENGTH ||
+                name.length > MAX_NAME_LENGTH) && (
+                <p className="profile__error">
+                  {/* {`Длина должна быть от ${MIN_NAME_LENGTH} до ${MAX_NAME_LENGTH} символов`} */}
+                </p>
+              )}
             </div>
             <div className="profile__input-email">
-              <p className="profile__email">E-mail</p>
+              <label className="profile__email" htmlFor="email">
+                E-mail
+              </label>
               <input
+                id="email"
                 className="profile__input"
                 type="email"
                 placeholder="Введите Email"
@@ -125,8 +151,8 @@ const Profile = () => {
             )}
           </div>
         </form>
-      </main>
-    </section>
+      </section>
+    </main>
   );
 };
 

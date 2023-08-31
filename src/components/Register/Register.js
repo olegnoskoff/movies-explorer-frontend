@@ -78,13 +78,13 @@ const Register = ({ onRegister }) => {
           />
         </div>
         <div className="register__btn-container">
-          <button className="register__button" type="button">
+          <button className="register__button" type="submit">
             Зарегистрироваться
           </button>
           <p className="register__text">
             Уже зарегистрированы?
             <NavLink className="register__link" to="/signin">
-              Войти
+                Войти
             </NavLink>
           </p>
         </div>
@@ -104,9 +104,12 @@ const FormField = ({
   maxLength,
 }) => (
   <>
-    <p className="register__input-title">{title}</p>
+    <label className="register__input-title" htmlFor={title.toLowerCase()}>
+      {title}
+    </label>
     <input
-      className={`register__input ${error && "register__input_error"}`}
+      id={title.toLowerCase()}
+      className={`register__input ${error ? "register__input_error" : ""}`}
       type={type}
       placeholder={placeholder}
       value={value}

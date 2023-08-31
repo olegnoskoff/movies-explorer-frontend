@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+// Movies.js
 import React, { useState, useEffect } from "react";
 import "./Movies.css";
 import SearchForm from "../SearchForm/SearchForm";
@@ -11,7 +12,9 @@ const Movies = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterShort, setFilterShort] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // Загрузка данных и обновление состояния movies
+  }, []);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -26,11 +29,9 @@ const Movies = () => {
   });
 
   return (
-    <main className="movies"> 
-      <section className="movies__content">
-        <SearchForm onSearch={handleSearch} onFilter={handleFilter} />
-        {loading ? <Preloader /> : <MoviesCardList movies={filteredMovies} />}
-      </section>
+    <main className="movies">
+      <SearchForm onSearch={handleSearch} onFilter={handleFilter} />
+      {loading ? <Preloader /> : <MoviesCardList movies={filteredMovies} />}
     </main>
   );
 };

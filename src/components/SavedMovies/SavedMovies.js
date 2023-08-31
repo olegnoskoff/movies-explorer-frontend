@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+// SavedMovies.js
 import React, { useState, useEffect } from "react";
 import "./SavedMovies.css";
 import SearchForm from "../SearchForm/SearchForm";
@@ -34,10 +35,8 @@ const SavedMovies = () => {
 
   return (
     <main className="savedmovies">
-      <section className="savedmovies__content">
-        <SearchForm onSearch={handleSearch} onFilter={handleFilter} />
-        {loading ? <Preloader /> : <MoviesCardList movies={filteredMovies} />}
-      </section>
+      <SearchForm onSearch={handleSearch} onFilter={handleFilter} />
+      {loading ? <Preloader /> : <MoviesCardList movies={filteredMovies} />}
     </main>
   );
 };

@@ -102,9 +102,12 @@ const FormField = ({
   maxLength,
 }) => (
   <>
-    <p className="login__input-title">{title}</p>
+    <label className="login__input-title" htmlFor={title.toLowerCase()}>
+      {title}
+    </label>
     <input
-      className={`login__input ${error && "login__input_error"}`}
+      id={title.toLowerCase()}
+      className={`login__input ${error ? "login__input_error" : ""}`}
       type={type}
       placeholder={placeholder}
       value={value}

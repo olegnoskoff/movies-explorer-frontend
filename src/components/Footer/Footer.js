@@ -1,39 +1,23 @@
-import React from "react";
-import "./Footer.css";
+import './Footer.css';
 
-const Footer = () => {
+function Footer() {
   const currentYear = new Date().getFullYear();
-
   return (
+
     <footer className="footer">
-      <div className="footer__container">
-        <h2 className="footer__title">
-          Учебный проект Яндекс.Практикум х BeatFilm.
-        </h2>
+      <h2 className="footer__title">Учебный проект Яндекс.Практикум х BeatFilm.</h2>
+      <div className="footer__bottom">
+      <p className="footer__copyright">&copy; {currentYear}</p>
+        <ul className="footer__links-list">
+          <li>
+            <a className="footer__link" href="https://practicum.yandex.ru/" target="_blank" rel="noopener noreferrer">Яндекс.Практикум</a>
+          </li>
+          <li>
+            <a className="footer__link" href="https://github.com/olegnoskoff" target="_blank" rel="noopener noreferrer">Github</a>
+          </li>
+        </ul>
       </div>
-      <nav className="footer__nav-container">
-        <div className="footer__nav-item">
-          <a
-            className="footer__link"
-            href="https://practicum.yandex.ru/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Яндекс.Практикум
-          </a>
-          <a
-            className="footer__link"
-            href="https://github.com/olegnoskoff"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Github
-          </a>
-        </div>
-        <p className="footer__copyright">&copy; {currentYear}</p>
-      </nav>
     </footer>
   );
-};
-
+}
 export default Footer;

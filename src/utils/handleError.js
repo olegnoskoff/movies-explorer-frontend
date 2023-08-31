@@ -1,21 +1,31 @@
 export function handleError(err) {
-  const errorMappings = {
-    "Вы ввели неправильный логин или пароль.": "password",
-    "При авторизации произошла ошибка. Токен не передан или передан не в неверном формате.":
-      "token",
-    "При авторизации произошла ошибка. Переданный токен некорректен.": "token",
-    "Пользователь с таким email уже существует.": "email",
-    "При регистрации пользователя произошла ошибка.": "registration",
-  };
-
   if (err.validation) {
     const fieldName = err.validation.body.keys[0];
     const errorMessage = err.validation.body.message;
     return { fieldName, errorMessage };
   }
 
-  if (err.message && errorMappings[err.message]) {
-    const fieldName = errorMappings[err.message];
+  if (err.message) {
+    let fieldName = "";
+    switch (err.message) {
+      case "Вы ввели неправильный логин или пароль.":
+        fieldName = "password";
+        break;
+      case "При авторизации произошла ошибка. Токен не передан или передан не в том формате.":
+        fieldName = "token";
+        break;
+      case "При авторизации произошла ошибка. Переданный токен некорректен.":
+        fieldName = "token";
+        break;
+      case "Пользователь с таким email уже существует.":
+        fieldName = "email";
+        break;
+      case "При регистрации пользователя произошла ошибка.":
+        fieldName = "registration";
+        break;
+      default:
+        fieldName = "";
+    }
     return { fieldName, errorMessage: err.message };
   }
 

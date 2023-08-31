@@ -35,7 +35,7 @@ function MoviesCard({ movie }) {
         <img
           className="card__image"
           src={MoviePictures}
-          alt="Постер фильма"
+          alt={`Постер к видео ${movie.title}`}
         />
       </a>
       <div className="card__element">
