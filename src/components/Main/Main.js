@@ -14,7 +14,6 @@ const Main = () => {
 
   return (
     <>
-      {/* Промо-раздел с кнопками для скроллинга */}
       <Promo
         aboutProjectRef={aboutProjectRef}
         techRef={techRef}
@@ -22,22 +21,18 @@ const Main = () => {
         scrollToRef={scrollToRef}
       />
 
-      {/* Раздел "О проекте" */}
       <section ref={aboutProjectRef}>
         <AboutProject />
       </section>
 
-      {/* Раздел "Технологии" */}
       <section ref={techRef}>
         <Techs />
       </section>
 
-      {/* Раздел "Обо мне" */}
       <section ref={aboutMeRef}>
         <AboutMe />
       </section>
 
-      {/* Раздел "Портфолио" */}
       <Portfolio />
     </>
   );

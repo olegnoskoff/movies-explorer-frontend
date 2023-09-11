@@ -1,39 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Register.css";
 import registerLogo from "../../images/header-logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
-import { handleError } from "../../utils/handleError";
+import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 
-const Register = ({ onRegister }) => {
+const Register = ({ onRegister, openPopup, closePopup }) => {
   const navigate = useNavigate();
+  const { values, handleChange, errors, isValid, handleServerError } =
+    useFormWithValidation();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
+  // Обработчик отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await onRegister(email, password, name);
-      navigate("/signin");
+      await onRegister(values.email, values.password, values.name);
+      openPopup("Регистрация прошла успешно");
+      setTimeout(() => {
+        closePopup();
+      }, 1000);
+      navigate("/movies");
     } catch (err) {
-      handleRegistrationError(err);
+      handleServerError(err.message, "registration");
     }
-  };
-
-  const handleRegistrationError = (err) => {
-    const { fieldName, errorMessage } = handleError(err);
-
-    setNameError(fieldName === "name" ? errorMessage : "");
-    setEmailError(fieldName === "email" ? errorMessage : "");
-    setPasswordError(
-      fieldName === "password"
-        ? errorMessage
-        : "При регистрации пользователя произошла ошибка."
-    );
   };
 
   return (
@@ -44,47 +32,77 @@ const Register = ({ onRegister }) => {
             <img
               className="register__logo"
               src={registerLogo}
-              alt="Логотип регистрации"
+              alt="Лого регистрации"
             />
           </NavLink>
           <h1 className="register__title">Добро пожаловать!</h1>
-          <FormField
-            title="Имя"
-            value={name}
-            error={nameError}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Введите имя"
+
+          <p className="register__input-title">Имя</p>
+
+          <input
+            name="name"
+            className={`register__input ${
+              errors.name && "register__input_error"
+            }`}
             type="text"
-            minLength={3} // Минимальная длина для имени
-            maxLength={20} // Максимальная длина для имени
-          />
-          <FormField
-            title="E-mail"
-            value={email}
-            error={emailError}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Введите E-mail"
+            placeholder="Введите имя"
+            value={values.name || ""}
+            onChange={handleChange}
+            required
+          ></input>
+
+          <p className="register__error">{errors.name}</p>
+
+          <p className="register__input-title">E-mail</p>
+
+          <input
+            name="email"
+            className={`register__input ${
+              errors.email && "register__input_error"
+            }`}
             type="email"
-          />
-          <FormField
-            title="Пароль"
-            value={password}
-            error={passwordError}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Введите пароль"
+            placeholder="Введите E-mail"
+            autoComplete="username"
+            value={values.email || ""}
+            onChange={handleChange}
+            required
+          ></input>
+
+          <p className="register__error">{errors.email}</p>
+
+          <p className="register__input-title">Пароль</p>
+
+          <input
+            name="password"
+            className={`register__input ${
+              errors.password && "register__input_error"
+            }`}
             type="password"
-            minLength={8} // Минимальная длина для пароля
-            maxLength={20} // Максимальная длина для пароля
-          />
+            placeholder="Введите пароль"
+            autoComplete="current-password"
+            value={values.password || ""}
+            onChange={handleChange}
+            required
+          ></input>
+
+          <p className="register__error">{errors.password}</p>
         </div>
+
         <div className="register__btn-container">
-          <button className="register__button" type="submit">
+          <p className="register__error register__error_active">
+            {errors.registration}
+          </p>
+          <button
+            className="register__button"
+            type="submit"
+            disabled={!isValid}
+          >
             Зарегистрироваться
           </button>
           <p className="register__text">
             Уже зарегистрированы?
             <NavLink className="register__link" to="/signin">
-                Войти
+              Войти
             </NavLink>
           </p>
         </div>
@@ -92,34 +110,5 @@ const Register = ({ onRegister }) => {
     </section>
   );
 };
-
-const FormField = ({
-  title,
-  value,
-  error,
-  onChange,
-  placeholder,
-  type,
-  minLength,
-  maxLength,
-}) => (
-  <>
-    <label className="register__input-title" htmlFor={title.toLowerCase()}>
-      {title}
-    </label>
-    <input
-      id={title.toLowerCase()}
-      className={`register__input ${error ? "register__input_error" : ""}`}
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      minLength={minLength}
-      maxLength={maxLength}
-      required
-    />
-    <p className="register__error">{error}</p>
-  </>
-);
 
 export default Register;

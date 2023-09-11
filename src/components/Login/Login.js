@@ -1,45 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Login.css";
 import loginLogo from "../../images/header-logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
-import { login } from "../../utils/MainApi";
-import { handleError } from "../../utils/handleError";
+import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 
-const Login = () => {
+const Login = ({ onLogin, openPopup, closePopup }) => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [tokenError, setTokenError] = useState("");
-
-  const handleErrors = (err) => {
-    const { fieldName, errorMessage } = handleError(err);
-
-    switch (fieldName) {
-      case "email":
-        setEmailError(errorMessage);
-        break;
-      case "password":
-        setPasswordError(errorMessage);
-        break;
-      case "token":
-        setTokenError(errorMessage);
-        break;
-      default:
-        setEmailError("");
-        setPasswordError("");
-        setTokenError("");
-    }
-  };
+  const { values, handleChange, errors, isValid, handleServerError } =
+    useFormWithValidation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
-      navigate("/");
+      await onLogin(values.email, values.password);
+      openPopup("Вход выполнен успешно");
+      setTimeout(() => {
+        closePopup();
+      }, 2000);
+      navigate("/movies");
     } catch (err) {
-      handleErrors(err);
+      handleServerError(err.message, "registration");
+      openPopup("Что-то пошло не так");
     }
   };
 
@@ -51,31 +32,45 @@ const Login = () => {
             <img
               className="login__logo"
               src={loginLogo}
-              alt="Лого регистрации"
-            />
+              alt="Логотип регистрации"
+            ></img>
           </NavLink>
-          <h1 className="login__title">Рады видеть!</h1>
-          <FormField
-            title="E-mail"
-            value={email}
-            error={emailError}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Введите E-mail"
+          <h2 className="login__title">Рады видеть!</h2>
+          <p className="login__input-title">E-mail</p>
+
+          <input
+            name="email"
+            className={`login__input ${errors.email && "login__input_error"}`}
             type="email"
-          />
-          <FormField
-            title="Пароль"
-            value={password}
-            error={passwordError}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Введите пароль"
+            placeholder="Введите E-mail"
+            autoComplete="username"
+            value={values.email || ""}
+            onChange={handleChange}
+            required
+          ></input>
+          <p className="login__error">{errors.email}</p>
+
+          <p className="login__input-title">Пароль</p>
+
+          <input
+            name="password"
+            className={`login__input ${
+              errors.password && "login__input_error"
+            }`}
             type="password"
-            minLength={8} // Минимальная длина для пароля
-            maxLength={20} // Максимальная длина для пароля
-          />
+            placeholder="Введите пароль"
+            autoComplete="current-password"
+            value={values.password || ""}
+            onChange={handleChange}
+            required
+          ></input>
+          <p className="login__error">{errors.password}</p>
         </div>
         <div className="login__button-container">
-          <button className="login__button" type="button">
+          {errors.token && (
+            <p className="login__error login__error_active">{errors.token}</p>
+          )}
+          <button className="login__button" type="submit" disabled={!isValid}>
             Войти
           </button>
           <p className="login__text">
@@ -85,39 +80,9 @@ const Login = () => {
             </NavLink>
           </p>
         </div>
-        {tokenError && <span className="login__error">{tokenError}</span>}
       </form>
     </section>
   );
 };
-
-const FormField = ({
-  title,
-  value,
-  error,
-  onChange,
-  placeholder,
-  type,
-  minLength,
-  maxLength,
-}) => (
-  <>
-    <label className="login__input-title" htmlFor={title.toLowerCase()}>
-      {title}
-    </label>
-    <input
-      id={title.toLowerCase()}
-      className={`login__input ${error ? "login__input_error" : ""}`}
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      minLength={minLength}
-      maxLength={maxLength}
-      required
-    />
-    <span className="login__error">{error}</span>
-  </>
-);
 
 export default Login;

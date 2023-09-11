@@ -91,7 +91,7 @@
 }
 
 @media screen and (min-width: 320px) {
-  .about-project__title  {
+  .about-project__title {
     padding-bottom: 27px;
   }
 
@@ -177,7 +177,6 @@
     line-height: 17px;
     padding: 15px 0 11px;
   }
-
 
   .about-project__stage-title {
     padding-bottom: 25px;

@@ -35,7 +35,6 @@
 }
 
 .login__logo-link:hover {
-  /* transform: scale(1.04); */
   opacity: 0.8;
 }
 
@@ -102,6 +101,11 @@
   min-height: 18px;
 }
 
+.login__error_active {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .login__button {
   text-align: center;
   font-size: 12px;
@@ -111,6 +115,11 @@
   background: #3456f3;
   padding: 15px 0;
   color: #fff;
+}
+
+.login__button[disabled] {
+  background-color: #f8f8f8;
+  cursor: not-allowed;
 }
 
 .login__button:hover {

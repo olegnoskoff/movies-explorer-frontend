@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useMatch, Link } from "react-router-dom";
 import accountIcon from "../../images/account-icon.svg";
 import "./Navigation.css";
 
 const Navigation = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
+  const matchHome = useMatch("/");
+  const matchMovies = useMatch("/movies");
+  const matchSavedMovies = useMatch("/saved-movies");
 
   const toggleMenu = () => setMenuOpen(!isMenuOpen);
-
-  const isActive = (path) => location.pathname === path;
 
   return (
     <nav className="navigation">
@@ -29,9 +29,8 @@ const Navigation = () => {
               <li className="navigation__link-item">
                 <Link
                   to="/"
-                  className={`navigation__link navigation__link_hidden ${
-                    isActive("/") ? "navigation__link_active" : ""
-                  }`}
+                  className={`navigation__link navigation__link_hidden
+                    ${matchHome ? "navigation__link_active" : ""}`}
                 >
                   Главная
                 </Link>
@@ -40,7 +39,7 @@ const Navigation = () => {
                 <Link
                   to="/movies"
                   className={`navigation__link ${
-                    isActive("/movies") ? "navigation__link_active" : ""
+                    matchMovies ? "navigation__link_active" : ""
                   }`}
                 >
                   Фильмы
@@ -50,7 +49,7 @@ const Navigation = () => {
                 <Link
                   to="/saved-movies"
                   className={`navigation__link ${
-                    isActive("/saved-movies") ? "navigation__link_active" : ""
+                    matchSavedMovies ? "navigation__link_active" : ""
                   }`}
                 >
                   Сохранённые фильмы

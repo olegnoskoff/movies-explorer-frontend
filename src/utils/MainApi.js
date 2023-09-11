@@ -1,17 +1,6 @@
 const baseURL = "https://api.movies100.nomoreparties.co";
 
-const makeRequest = async (method, endpoint, body = null) => {
-  const requestOptions = {
-    method,
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: body ? JSON.stringify(body) : null,
-  };
-
-  const response = await fetch(`${baseURL}${endpoint}`, requestOptions);
-  return checkResponse(response);
-};
-
+// Функция для обработки ответа от сервера
 const checkResponse = (res) => {
   if (res.ok) {
     return res.json();
@@ -19,24 +8,73 @@ const checkResponse = (res) => {
   return res.json().then((err) => Promise.reject(err));
 };
 
+//  Регистраця пользователя
 const register = (email, password, name) =>
-  makeRequest("POST", "/signup", { email, password, name });
+  fetch(`${baseURL}/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email, password, name }),
+  }).then(checkResponse);
 
+// Авторизация пользователя
 const login = (email, password) =>
-  makeRequest("POST", "/signin", { email, password });
+  fetch(`${baseURL}/signin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email, password }),
+  }).then(checkResponse);
 
-const getUser = () => makeRequest("GET", "/users/me");
+// Получение данных текущего пользователя
+const getUser = () =>
+  fetch(`${baseURL}/users/me`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  }).then(checkResponse);
 
+//  Обновляем данные текущего пользователя
 const updateUser = (email, name) =>
-  makeRequest("PATCH", "/users/me", { email, name });
+  fetch(`${baseURL}/users/me`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email, name }),
+  }).then(checkResponse);
 
-const getMovies = () => makeRequest("GET", "/movies");
+// Получаем данные всех сохраненных фильмов пользователя
+const getMovies = () =>
+  fetch(`${baseURL}/movies`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  }).then(checkResponse);
 
-const createMovie = (movieData) => makeRequest("POST", "/movies", movieData);
+// Создаем новый фильм
+const createMovie = (movieData) =>
+  fetch(`${baseURL}/movies`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(movieData),
+  }).then(checkResponse);
 
-const deleteMovie = (movieId) => makeRequest("DELETE", `/movies/${movieId}`);
+// Удаляем фильм
+const deleteMovie = (movieId) =>
+  fetch(`${baseURL}/movies/${movieId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  }).then(checkResponse);
 
-const signout = () => makeRequest("GET", "/signout");
+// Выходим из аккаунта
+const signout = () =>
+  fetch(`${baseURL}/signout`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  }).then(checkResponse);
 
 export {
   register,

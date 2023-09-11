@@ -13,6 +13,7 @@ const Promo = ({ aboutProjectRef, techRef, aboutMeRef, scrollToRef }) => {
           <li>
             <button
               className="promo__link"
+              type="button"
               onClick={() => scrollToRef(aboutProjectRef)}
             >
               О проекте

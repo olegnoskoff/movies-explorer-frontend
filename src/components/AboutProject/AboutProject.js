@@ -13,7 +13,7 @@ const Stage = ({ title, description }) => {
 const TimeBar = ({ text, title, className }) => {
   return (
     <div className={className}>
-      <div className={`${className}-text`}>{text}</div>
+      <h4 className={`${className}-text`}>{text}</h4>
       <p className="about-project__timebar-title">{title}</p>
     </div>
   );

@@ -1,158 +1,166 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
 import "./Profile.css";
-import { getUser, updateUser, signout } from "../../utils/MainApi";
+import { updateUser } from "../../utils/MainApi";
+import { useFormWithValidation } from "../../hooks/useFormWithValidation";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-const Profile = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+
+const Profile = ({ openPopup, onSignOut }) => {
+  const { currentUser, updateCurrentUser } = useContext(CurrentUserContext);
+  const [name, setName] = useState(currentUser.name);
+  const [email, setEmail] = useState(currentUser.email);
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const navigate = useNavigate();
 
-  const MIN_NAME_LENGTH = 3;
-  const MAX_NAME_LENGTH = 12;
-
+  // Отслеживайте изменения currentUser и обновляйте локальное состояние
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = await getUser();
-        setName(userData.name);
-        setEmail(userData.email);
-      } catch (error) {
-        console.log(error);
-        setErrorMessage("При обновлении профиля произошла ошибка.");
-      }
-    };
+    setName(currentUser.name);
+    setEmail(currentUser.email);
+  }, [currentUser]);
 
-    if (process.env.NODE_ENV === "development") {
-      setName("Виталий");
-      setEmail("pochta@yandex.ru");
-    } else {
-      fetchUserData();
-    }
-  }, []);
+  const {
+    values,
+    handleChange,
+    errors,
+    isValid,
+    handleServerError,
+    setValues,
+  } = useFormWithValidation();
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Проверка на изменение данных
+  const hasDataChanged = () => {
+    return values.name !== name || values.email !== email;
+  };
+
+  // Обработчик для кнопки редактирования
   const handleEditButtonClick = (evt) => {
     evt.preventDefault();
+    setValues({
+      name: currentUser.name,
+      email: currentUser.email,
+    });
     setIsEditing(true);
   };
 
-  const handleSaveButtonClick = async (evt) => {
+  // Обработчик для кнопки редактирования
+  const handleSaveButtonClick = (evt) => {
     evt.preventDefault();
-    setIsEditing(false);
 
-    try {
-      const updatedUserData = await updateUser(email, name);
-      setName(updatedUserData.name);
-      setEmail(updatedUserData.email);
-    } catch (error) {
-      console.log(error);
-      if (error.message === "Conflict") {
-        setErrorMessage("Пользователь с таким email уже существует.");
-      } else {
-        setErrorMessage("При обновлении профиля произошла ошибка.");
-      }
-    }
-  };
+    if (!isValid || !hasDataChanged()) return;
 
-  const handleSignOut = async () => {
-    try {
-      await signout();
-      navigate(-1); //возвращает на предыдущую страницу из истории
-    } catch (error) {
-      console.log(error);
-    }
+    setIsSubmitting(true);
+    // Отправка обновленных данных пользователя
+    updateUser(values.email, values.name)
+      .then((updatedUserData) => {
+        updateCurrentUser(updatedUserData.data);
+        setName(updatedUserData.data.name);
+        setEmail(updatedUserData.data.email);
+        setIsEditing(false);
+        openPopup("Данные успешно обновлены!");
+      })
+      .catch((error) => {
+        if (error.message === "Conflict") {
+          handleServerError(
+            "email",
+            "Пользователь с таким email уже существует."
+          );
+          openPopup("Пользователь с таким email уже существует.");
+        } else {
+          handleServerError(
+            "updateProfile",
+            "При обновлении профиля произошла ошибка."
+          );
+          openPopup("При обновлении профиля произошла ошибка.");
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
-    <main>
-      <section className="profile">
-        <form className="profile__form">
-          <div className="profile__info">
-            <h1 className="profile__title">Привет, {name}!</h1>
-            <div
-              className={`profile__input-name ${
+    <section className="profile">
+      <form className="profile__form">
+        <div className="profile__info">
+          <h1 className="profile__title">Привет, {name}!</h1>
+          <div className={`profile__input-name ${
                 isInputFocused ? "focused" : ""
               }`}
             >
-              <label className="profile__name" htmlFor="name">
-                Имя
-              </label>
-              <input
-                id="name"
-                className="profile__input"
-                type="text"
-                placeholder="Введите имя"
-                value={name}
-                onChange={(e) => {
-                  if (e.target.value.length <= MAX_NAME_LENGTH) {
-                    setName(e.target.value);
-                  }
-                }}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
-                disabled={!isEditing}
-                required
-              />
-              {(name.length < MIN_NAME_LENGTH ||
-                name.length > MAX_NAME_LENGTH) && (
-                <p className="profile__error">
-                  {/* {`Длина должна быть от ${MIN_NAME_LENGTH} до ${MAX_NAME_LENGTH} символов`} */}
-                </p>
-              )}
-            </div>
-            <div className="profile__input-email">
-              <label className="profile__email" htmlFor="email">
-                E-mail
-              </label>
-              <input
-                id="email"
-                className="profile__input"
-                type="email"
-                placeholder="Введите Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={!isEditing}
-                required
-              />
-            </div>
+            <p className="profile__name">Имя</p>
+            <input
+              className="profile__input"
+              type="text"
+              placeholder="Введите имя"
+              name="name"
+              value={isEditing ? values.name || "" : name}
+              onChange={handleChange}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+              disabled={!isEditing || isSubmitting}
+              required
+            />
           </div>
+
+          <p className="profile__error">{errors.name}</p>
+
+          <div className="profile__input-email">
+            <p className="profile__email">E-mail</p>
+            <input
+              className="profile__input"
+              type="email"
+              placeholder="Введите Email"
+              name="email"
+              value={isEditing ? values.email || "" : email}
+              onChange={handleChange}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+              disabled={!isEditing || isSubmitting}
+              required
+            />
+          </div>
+          <p className="profile__error">{errors.email}</p>
+        </div>
+
+        {isEditing ? (
           <div className="profile__btns">
-            {isEditing ? (
-              <button
-                onClick={handleSaveButtonClick}
-                className="profile__btn-save"
-                type="submit"
-              >
-                Сохранить
-              </button>
-            ) : (
-              <>
-                {errorMessage && (
-                  <p className="profile__error">{errorMessage}</p>
-                )}
-                <button
-                  onClick={handleEditButtonClick}
-                  className="profile__btn-edit"
-                  type="button"
-                >
-                  Редактировать
-                </button>
-                <button
-                  className="profile__btn-escape"
-                  type="button"
-                  onClick={handleSignOut}
-                >
-                  Выйти из аккаунта
-                </button>
-              </>
-            )}
+            <button
+              onClick={handleSaveButtonClick}
+              className="profile__btn-save"
+              type="submit"
+              disabled={!isValid || !hasDataChanged() || isSubmitting}
+            >
+              Сохранить
+            </button>
           </div>
-        </form>
-      </section>
-    </main>
+        ) : (
+          <div className="profile__btns">
+            {errors.updateProfile && (
+              <p className="profile__error profile__error_active">
+                {errors.updateProfile}
+              </p>
+            )}
+            <button
+              onClick={handleEditButtonClick}
+              className="profile__btn-edit"
+              disabled={isSubmitting}
+            >
+              Редактировать
+            </button>
+            <button
+              className="profile__btn-escape"
+              type="button"
+              onClick={onSignOut}
+              disabled={isSubmitting}
+            >
+              Выйти из аккаунта
+            </button>{" "}
+          </div>
+        )}
+      </form>
+    </section>
   );
 };
 
