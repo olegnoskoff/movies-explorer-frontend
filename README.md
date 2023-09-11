@@ -1,6 +1,6 @@
 # Movies-explorer-frontend (Фронтенд-часть)
 
-Финальная часть дипломной работы на курсе Веб-разработчик от ЯндексПравктикума. 
+Финальная часть дипломной работы на курсе Веб-разработчик от ЯндексПрактикума. 
 
 ### Структура приложения 
 Приложение состоит из двух частей:
@@ -17,7 +17,7 @@
 
 ## Ссылка на pull request
 
-* [Request](https://github.com/olegnoskoff/movies-explorer-frontend/pull/2)
+* [Request](https://github.com/olegnoskoff/movies-explorer-frontend/tree/level-3)
 
 ## Технологии
 
