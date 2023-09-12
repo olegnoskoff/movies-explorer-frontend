@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import loginLogo from "../../images/header-logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -9,21 +9,30 @@ const Login = ({ onLogin, openPopup, closePopup }) => {
   const { values, handleChange, errors, isValid, handleServerError } =
     useFormWithValidation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await onLogin(values.email, values.password);
-      openPopup("Вход выполнен успешно");
-      setTimeout(() => {
-        closePopup();
-      }, 2000);
-      navigate("/movies");
-    } catch (err) {
-      handleServerError(err.message, "registration");
-      openPopup("Что-то пошло не так");
-    }
-  };
+  // Создаем состояние для отслеживания статуса отправки запроса
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+  
+    onLogin(values.email, values.password)
+      .then(() => {
+        openPopup("Вход выполнен успешно");
+        setTimeout(() => {
+          closePopup();
+        }, 2000);
+        navigate("/movies");
+      })
+      .catch((err) => {
+        handleServerError(err.message, "registration");
+        openPopup("Что-то пошло не так");
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
+  
   return (
     <section className="login">
       <form className="login__form" onSubmit={handleSubmit}>
@@ -47,6 +56,7 @@ const Login = ({ onLogin, openPopup, closePopup }) => {
             value={values.email || ""}
             onChange={handleChange}
             required
+            disabled={isSubmitting} // Блокировка поля во время отправки
           ></input>
           <p className="login__error">{errors.email}</p>
 
@@ -63,6 +73,7 @@ const Login = ({ onLogin, openPopup, closePopup }) => {
             value={values.password || ""}
             onChange={handleChange}
             required
+            disabled={isSubmitting} // Блокировка поля во время отправки
           ></input>
           <p className="login__error">{errors.password}</p>
         </div>
@@ -70,9 +81,14 @@ const Login = ({ onLogin, openPopup, closePopup }) => {
           {errors.token && (
             <p className="login__error login__error_active">{errors.token}</p>
           )}
-          <button className="login__button" type="submit" disabled={!isValid}>
+          <button
+            className="login__button"
+            type="submit"
+            disabled={!isValid || isSubmitting}
+          >
             Войти
           </button>
+
           <p className="login__text">
             Ещё не зарегистрированы?
             <NavLink className="login__link" to="/signup">

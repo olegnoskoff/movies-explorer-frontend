@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import "./Register.css";
 import registerLogo from "../../images/header-logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -9,24 +9,37 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
   const { values, handleChange, errors, isValid, handleServerError } =
     useFormWithValidation();
 
-  // Обработчик отправки формы
-  const handleSubmit = async (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef(null);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await onRegister(values.email, values.password, values.name);
-      openPopup("Регистрация прошла успешно");
-      setTimeout(() => {
-        closePopup();
-      }, 1000);
-      navigate("/movies");
-    } catch (err) {
-      handleServerError(err.message, "registration");
+
+    if (isSubmitting) {
+      return;
     }
+
+    setIsSubmitting(true);
+
+    onRegister(values.email, values.password, values.name)
+      .then(() => {
+        openPopup("Регистрация прошла успешно");
+        setTimeout(() => {
+          closePopup();
+        }, 1000);
+        navigate("/movies");
+      })
+      .catch((err) => {
+        handleServerError(err.message, "registration");
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
     <section className="register">
-      <form className="register__form" onSubmit={handleSubmit}>
+      <form ref={formRef} className="register__form" onSubmit={handleSubmit}>
         <div className="register__container">
           <NavLink to="/" className="register__logo-link">
             <img
@@ -42,13 +55,14 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
           <input
             name="name"
             className={`register__input ${
-              errors.name && "register__input_error"
+              (errors.name || isSubmitting) && "register__input_error"
             }`}
             type="text"
             placeholder="Введите имя"
             value={values.name || ""}
             onChange={handleChange}
             required
+            disabled={isSubmitting}
           ></input>
 
           <p className="register__error">{errors.name}</p>
@@ -58,7 +72,7 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
           <input
             name="email"
             className={`register__input ${
-              errors.email && "register__input_error"
+              (errors.email || isSubmitting) && "register__input_error"
             }`}
             type="email"
             placeholder="Введите E-mail"
@@ -66,6 +80,7 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
             value={values.email || ""}
             onChange={handleChange}
             required
+            disabled={isSubmitting}
           ></input>
 
           <p className="register__error">{errors.email}</p>
@@ -75,7 +90,7 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
           <input
             name="password"
             className={`register__input ${
-              errors.password && "register__input_error"
+              (errors.password || isSubmitting) && "register__input_error"
             }`}
             type="password"
             placeholder="Введите пароль"
@@ -83,6 +98,7 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
             value={values.password || ""}
             onChange={handleChange}
             required
+            disabled={isSubmitting}
           ></input>
 
           <p className="register__error">{errors.password}</p>
@@ -95,7 +111,7 @@ const Register = ({ onRegister, openPopup, closePopup }) => {
           <button
             className="register__button"
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
           >
             Зарегистрироваться
           </button>

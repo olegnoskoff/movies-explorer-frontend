@@ -44,6 +44,11 @@
   padding-bottom: 96px;
 }
 
+.profile__error_active {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .profile__input-name {
   display: flex;
   flex-direction: row;
@@ -109,6 +114,11 @@
   border: none;
   padding: 13px 0 16px;
   width: 100%;
+}
+
+.profile__btn-save[disabled] {
+  background-color: #f8f8f8;
+  cursor: not-allowed;
 }
 
 .profile__btn-save:hover {

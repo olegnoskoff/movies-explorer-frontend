@@ -8,23 +8,29 @@ const MoviesCard = ({ movie, toggleFavoriteStatus, moviesSaved }) => {
   const [favorite, setFavorite] = useState(false);
   const actualMovie = movie.data || movie;
   const isSavedMoviesPath = pathname === "/saved-movies";
-  const movieImage = isSavedMoviesPath ? actualMovie.image : `https://api.nomoreparties.co${actualMovie.image.url}`;
+  const movieImage = isSavedMoviesPath
+    ? actualMovie.image
+    : `https://api.nomoreparties.co${actualMovie.image.url}`;
 
   // Обработчик для добавления/удаления из избранного
-  const handleFavoriteToggle = async () => {
-    try {
-      if (isSavedMoviesPath) {
-        await toggleFavoriteStatus(actualMovie._id);
-      } else {
-        await toggleFavoriteStatus(actualMovie);
-      }
-    } catch (err) {
-      navigate(
-        `/error?message=${encodeURIComponent(
-          err.message || "Ошибка при изменении избранного"
-        )}`
-      );
+  const handleFavoriteToggle = () => {
+    let togglePromise;
+
+    if (isSavedMoviesPath) {
+      togglePromise = Promise.resolve(toggleFavoriteStatus(actualMovie._id));
+    } else {
+      togglePromise = Promise.resolve(toggleFavoriteStatus(actualMovie));
     }
+
+    togglePromise
+      .then(() => setFavorite(!favorite))
+      .catch((err) => {
+        navigate(
+          `/error?message=${encodeURIComponent(
+            err.message || "Ошибка при изменении избранного"
+          )}`
+        );
+      });
   };
 
   useEffect(() => {

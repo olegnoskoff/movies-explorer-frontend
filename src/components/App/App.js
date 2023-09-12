@@ -18,7 +18,7 @@ import Login from "../Login/Login";
 import Profile from "../Profile/Profile";
 import Movies from "../Movies/Movies";
 import SavedMovies from "../SavedMovies/SavedMovies";
-import ErrorBanner from "../ErrorStatus/ErrorStatus";
+import ErrorStatus from "../ErrorStatus/ErrorStatus";
 import Popup from "../Popup/Popup";
 import { withProtectedRoute } from "../ProtectedRoute/ProtectedRoute";
 
@@ -110,86 +110,26 @@ function InnerApp() {
     navigate("/movies", { replace: true });
   }
 
-  return (
+ return (
     <CurrentUserContext.Provider value={{ currentUser, updateCurrentUser }}>
-      <div className="App">
-        {pathname === "/" ||
-        pathname === "/movies" ||
-        pathname === "/saved-movies" ||
-        pathname === "/profile" ? (
-          <Header loggedIn={loggedIn} />
-        ) : (
-          ""
-        )}
+      <div className='App'>
+        {pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' || pathname === '/profile' ?
+          <Header loggedIn={loggedIn} /> : ''}
 
-        <main>
+       <main>
           <Routes>
-            <Route path="/" element={<Main />} />
-            <Route
-              path="/signin"
-              element={
-                loggedIn ? null : (
-                  <Login
-                    onLogin={handleLogin}
-                    openPopup={openPopup}
-                    closePopup={closePopup}
-                  />
-                )
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                loggedIn ? null : (
-                  <Register
-                    onRegister={handleRegister}
-                    openPopup={openPopup}
-                    closePopup={closePopup}
-                  />
-                )
-              }
-            />
-            <Route
-              path="/profile"
-              element={withProtectedRoute(Profile)({
-                loggedIn,
-                loading,
-                openPopup,
-                closePopup,
-                onSignOut: handleSignOut,
-              })}
-            />
-            <Route
-              path="/movies"
-              element={withProtectedRoute(Movies)({
-                loggedIn,
-                loading,
-                user: currentUser,
-                openPopup,
-              })}
-            />
-            <Route
-              path="/saved-movies"
-              element={withProtectedRoute(SavedMovies)({
-                loggedIn,
-                loading,
-                user: currentUser,
-                openPopup,
-              })}
-            />
-
-            <Route path="/error" element={<ErrorBanner />} />
-            <Route path="*" element={<ErrorBanner />} />
+            <Route path='/' element={<Main />} />
+            <Route path='/signin' element={loggedIn ? null : <Login onLogin={handleLogin} openPopup={openPopup} closePopup={closePopup} />} />
+            <Route path='/signup' element={loggedIn ? null : <Register onRegister={handleRegister} openPopup={openPopup} closePopup={closePopup} />} />
+            <Route path='/profile' element={withProtectedRoute(Profile)({ loggedIn, loading, openPopup, closePopup, onSignOut: handleSignOut })} />
+            <Route path='/movies' element={withProtectedRoute(Movies)({ loggedIn, loading, user: currentUser, openPopup })} />
+            <Route path='/saved-movies' element={withProtectedRoute(SavedMovies)({ loggedIn, loading, user: currentUser, openPopup })} />
+            <Route path='/error' element={<ErrorStatus />} />
+            <Route path='*' element={<ErrorStatus />} />
           </Routes>
-        </main>
+          </main>
 
-        {pathname === "/" ||
-        pathname === "/movies" ||
-        pathname === "/saved-movies" ? (
-          <Footer />
-        ) : (
-          ""
-        )}
+{pathname === '/' || pathname === '/movies' || pathname === '/saved-movies' ? <Footer /> : ''}
 
         <Popup text={popupTitle} isOpen={isOpenPopup} onClose={closePopup} />
       </div>

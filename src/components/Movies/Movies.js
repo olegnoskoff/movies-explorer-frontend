@@ -21,76 +21,91 @@ const Movies = ({ openPopup }) => {
   const [moviesSaved, setMoviesSaved] = useState([]);
   const [emptySearch, setEmptySearch] = useState(false);
   const navigate = useNavigate();
-  // Используем хук для отслеживания изменения размера экрана
+  
   useScreenResize(setAdditionalMoviesCount);
 
   useEffect(() => {
-    const fetchSavedAndAllMovies = async () => {
-      setLoading(true); // Начинаем загрузку
+    const fetchSavedAndAllMovies = () => {
+      setLoading(true);
 
-      // Проверяем localStorage на наличие фильмов
       if (localStorage.getItem("movies")) {
         const cachedMovies = JSON.parse(localStorage.getItem("movies"));
-        try {
-          const savedMoviesResponse = await mainApi.getMovies();
-          const { data: savedMoviesData } = savedMoviesResponse;
-          let savedMovies = [];
-          if (Array.isArray(savedMoviesData)) {
-            savedMovies = savedMoviesData;
-          } else {
-            console.error(
-              "Неожиданный формат для сохраненных фильмов:",
-              savedMoviesResponse
-            );
-          }
-          setMoviesSaved(savedMovies);
-          const enhancedMovies = cachedMovies.map((movie) => ({
-            ...movie,
-            isFavorited: savedMovies.some(
-              (savedMovie) => savedMovie.movieId === movie.id
-            ),
-          }));
-          setAllMovies(enhancedMovies);
-        } catch (err) {
-          console.error("Ошибка при загрузке сохраненных фильмов:", err);
-        }
-      } else {
-        try {
-          const allMoviesData = await moviesApi.getMovies();
-          const savedMoviesResponse = await mainApi.getMovies();
-          const { data: savedMoviesData } = savedMoviesResponse;
-          let savedMovies = [];
-          if (Array.isArray(savedMoviesData)) {
-            savedMovies = savedMoviesData;
-          } else {
-            console.error(
-              "Неожиданный формат для сохраненных фильмов:",
-              savedMoviesResponse
-            );
-          }
-          setMoviesSaved(savedMovies);
-          const enhancedMovies = allMoviesData.map((movie) => ({
-            ...movie,
-            isFavorited: savedMovies.some(
-              (savedMovie) => savedMovie.movieId === movie.id
-            ),
-          }));
-          setAllMovies(enhancedMovies);
-          localStorage.setItem("movies", JSON.stringify(enhancedMovies));
-        } catch (err) {
-          openPopup(
-            "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
-          );
-        }
-      }
 
-      setLoading(false);
+        mainApi
+          .getMovies()
+          .then((savedMoviesResponse) => {
+            const { data: savedMoviesData } = savedMoviesResponse;
+            let savedMovies = [];
+            if (Array.isArray(savedMoviesData)) {
+              savedMovies = savedMoviesData;
+            } else {
+              console.error(
+                "Неожиданный формат для сохраненных фильмов:",
+                savedMoviesResponse
+              );
+            }
+            setMoviesSaved(savedMovies);
+            const enhancedMovies = cachedMovies.map((movie) => ({
+              ...movie,
+              isFavorited: savedMovies.some(
+                (savedMovie) => savedMovie.movieId === movie.id
+              ),
+            }));
+            setAllMovies(enhancedMovies);
+          })
+          .catch((err) => {
+            console.error("Ошибка при загрузке сохраненных фильмов:", err);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        moviesApi
+          .getMovies()
+          .then((allMoviesData) => {
+            mainApi
+              .getMovies()
+              .then((savedMoviesResponse) => {
+                const { data: savedMoviesData } = savedMoviesResponse;
+                let savedMovies = [];
+                if (Array.isArray(savedMoviesData)) {
+                  savedMovies = savedMoviesData;
+                } else {
+                  console.error(
+                    "Неожиданный формат для сохраненных фильмов:",
+                    savedMoviesResponse
+                  );
+                }
+                setMoviesSaved(savedMovies);
+                const enhancedMovies = allMoviesData.map((movie) => ({
+                  ...movie,
+                  isFavorited: savedMovies.some(
+                    (savedMovie) => savedMovie.movieId === movie.id
+                  ),
+                }));
+                setAllMovies(enhancedMovies);
+                localStorage.setItem("movies", JSON.stringify(enhancedMovies));
+              })
+              .catch((err) => {
+                openPopup(
+                  "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+                );
+              })
+              .finally(() => {
+                setLoading(false);
+              });
+          })
+          .catch((err) => {
+            openPopup(
+              "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+            );
+          });
+      }
     };
 
     fetchSavedAndAllMovies();
   }, [openPopup]);
 
-  // Фильтрация фильмов на основе ввода пользователя
   const handleFilterMovies = useCallback(
     (inputSearch, tumbler) => {
       setMoviesInputSearch(inputSearch);
@@ -115,7 +130,6 @@ const Movies = ({ openPopup }) => {
 
   useEffect(() => {
     if (allMovies && allMovies.length > 0) {
-      // Получаем значение moviesInputSearch из localStorage
       const localMoviesInputSearch = localStorage.getItem("moviesInputSearch");
 
       if (localMoviesInputSearch) {
@@ -131,7 +145,6 @@ const Movies = ({ openPopup }) => {
         setMoviesRemains(remains);
       }
 
-      // Получаем значение moviesTumbler из localStorage
       const localMoviesTumbler = JSON.parse(
         localStorage.getItem("moviesTumbler")
       );
@@ -144,44 +157,45 @@ const Movies = ({ openPopup }) => {
 
   const getLocalMovieId = (movie) => movie.movieId || movie.id;
 
-  // Обработка добавления или удаления фильма из избранного
-
-  const toggleFavoriteStatus = async (movie) => {
-    try {
-      let updatedMovie;
-      if (movie.isFavorited) {
-        await deleteMovieFromFavorites(movie);
-        updatedMovie = { ...movie, isFavorited: false };
-      } else {
-        updatedMovie = await addMovieToFavorites(movie);
-      }
-      updateLocalMovies(updatedMovie);
-    } catch (err) {
-      handleToggleError(err);
+  const toggleFavoriteStatus = (movie) => {
+    let updatedMovie;
+    if (movie.isFavorited) {
+      deleteMovieFromFavorites(movie)
+        .then(() => {
+          updatedMovie = { ...movie, isFavorited: false };
+          updateLocalMovies(updatedMovie);
+        })
+        .catch((err) => {
+          handleToggleError(err);
+        });
+    } else {
+      addMovieToFavorites(movie)
+        .then((updatedMovie) => {
+          updateLocalMovies(updatedMovie);
+        })
+        .catch((err) => {
+          handleToggleError(err);
+        });
     }
   };
 
-  //Удаляем фильм из избранного на сервере
-  const deleteMovieFromFavorites = async (movie) => {
-    await mainApi.deleteMovie(movie._id);
-    movie.isFavorited = false;
+  const deleteMovieFromFavorites = (movie) => {
+    return mainApi.deleteMovie(movie._id);
   };
 
-  //Добавляет фильм в избранное на сервере
-  const addMovieToFavorites = async (movie) => {
+  const addMovieToFavorites = (movie) => {
     const formattedMovie = formatMovieData(movie);
-    const savedMovieResponse = await mainApi.createMovie(formattedMovie);
-    const savedMovieData = savedMovieResponse.data;
-    const updatedMovie = {
-      ...movie,
-      isFavorited: true,
-      _id: savedMovieData._id,
-    };
-
-    return updatedMovie;
+    return mainApi.createMovie(formattedMovie).then((savedMovieResponse) => {
+      const savedMovieData = savedMovieResponse.data;
+      const updatedMovie = {
+        ...movie,
+        isFavorited: true,
+        _id: savedMovieData._id,
+      };
+      return updatedMovie;
+    });
   };
 
-  //Обновляем список фильмов в локальном состоянии и локальном хранилище.
   const updateLocalMovies = (updatedMovie) => {
     const localMovieId = getLocalMovieId(updatedMovie);
     const updatedMovies = allMovies.map((m) =>
@@ -200,7 +214,6 @@ const Movies = ({ openPopup }) => {
     );
   };
 
-  // Обработка нажатия "Показать еще"
   const handleMoreButtonClick = () => {
     const newDisplayedMovies = [
       ...displayedMovies,

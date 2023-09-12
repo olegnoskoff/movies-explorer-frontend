@@ -4,7 +4,6 @@ import { updateUser } from "../../utils/MainApi";
 import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-
 const Profile = ({ openPopup, onSignOut }) => {
   const { currentUser, updateCurrentUser } = useContext(CurrentUserContext);
   const [name, setName] = useState(currentUser.name);
@@ -85,10 +84,9 @@ const Profile = ({ openPopup, onSignOut }) => {
       <form className="profile__form">
         <div className="profile__info">
           <h1 className="profile__title">Привет, {name}!</h1>
-          <div className={`profile__input-name ${
-                isInputFocused ? "focused" : ""
-              }`}
-            >
+          <div
+            className={`profile__input-name ${isInputFocused ? "focused" : ""}`}
+          >
             <p className="profile__name">Имя</p>
             <input
               className="profile__input"

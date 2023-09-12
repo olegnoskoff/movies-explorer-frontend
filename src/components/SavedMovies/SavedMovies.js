@@ -14,21 +14,24 @@ const SavedMovies = ({ openPopup }) => {
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [errorText, setErrorText] = useState("");
-  const [moviesTumbler, setmoviesTumbler] = useState(false);
-  const [moviesInputSearch, setmoviesInputSearch] = useState("");
+  const [moviesTumbler, setMoviesTumbler] = useState(false);
+  const [moviesInputSearch, setMoviesInputSearch] = useState("");
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(() => {
     setLoading(true);
-    try {
-      const allMovies = await getSavedMovies();
-      setMovies(allMovies.data);
-      setFilteredMovies(allMovies.data);
-    } catch (err) {
-      setErrorText("Ошибка при получении сохранённых фильмов");
-      openPopup("Ошибка при получении сохранённых фильмов");
-    } finally {
-      setLoading(false);
-    }
+    getSavedMovies()
+      .then((response) => response.data)
+      .then((allMovies) => {
+        setMovies(allMovies);
+        setFilteredMovies(allMovies);
+      })
+      .catch((err) => {
+        setErrorText("Ошибка при получении сохранённых фильмов");
+        openPopup("Ошибка при получении сохранённых фильмов");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [openPopup]);
 
   // Загрузка сохраненных фильмов при инициализации компонента
@@ -38,8 +41,8 @@ const SavedMovies = ({ openPopup }) => {
 
   // Обработчик фильтрации
   const handleGetMovies = (inputSearch = "", tumbler = false) => {
-    setmoviesTumbler(tumbler);
-    setmoviesInputSearch(inputSearch);
+    setMoviesTumbler(tumbler);
+    setMoviesInputSearch(inputSearch);
 
     if (inputSearch.trim() === "") {
       const filtered = filterMovies(movies, "", tumbler);
@@ -52,26 +55,24 @@ const SavedMovies = ({ openPopup }) => {
 
   // Обработчик переключателя "короткометражек"
   const handleGetMoviesTumbler = (tumbler) => {
-    setmoviesTumbler(tumbler);
+    setMoviesTumbler(tumbler);
     handleGetMovies(moviesInputSearch, tumbler);
   };
 
   // Обработчик удаления фильма
-  const handleDeleteMovie = async (movieId) => {
-    try {
-      await deleteSavedMovie(movieId);
-
-      setMovies((prevMovies) => {
-        const updated = prevMovies.filter((movie) => movie._id !== movieId);
-        setFilteredMovies(
-          filterMovies(updated, moviesInputSearch, moviesTumbler)
-        );
-        return updated;
+  const handleDeleteMovie = (movieId) => {
+    deleteSavedMovie(movieId)
+      .then(() => {
+        setMovies((prevMovies) => {
+          const updated = prevMovies.filter((movie) => movie._id !== movieId);
+          setFilteredMovies(filterMovies(updated, moviesInputSearch, moviesTumbler));
+          return updated;
+        });
+      })
+      .catch((err) => {
+        setErrorText("Ошибка при удалении фильма");
+        openPopup("Ошибка при удалении фильма");
       });
-    } catch (err) {
-      setErrorText("Ошибка при удалении фильма");
-      openPopup("Ошибка при удалении фильма");
-    }
   };
 
   return (
