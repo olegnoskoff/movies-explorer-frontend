@@ -17,7 +17,7 @@
 
 ## Ссылка на pull request
 
-* [Request](https://github.com/olegnoskoff/movies-explorer-frontend/tree/level-3)
+* [Request](https://github.com/olegnoskoff/movies-explorer-frontend/pull/2)
 
 ## Технологии
 
