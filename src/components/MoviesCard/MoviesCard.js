@@ -1,44 +1,33 @@
-import "./MoviesCard.css";
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import './MoviesCard.css';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const MoviesCard = ({ movie, toggleFavoriteStatus, moviesSaved }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [favorite, setFavorite] = useState(false);
   const actualMovie = movie.data || movie;
-  const isSavedMoviesPath = pathname === "/saved-movies";
-  const movieImage = isSavedMoviesPath
-    ? actualMovie.image
-    : `https://api.nomoreparties.co${actualMovie.image.url}`;
+  const isSavedMoviesPath = pathname === '/saved-movies';
+  const movieImage = isSavedMoviesPath ? actualMovie.image : `https://api.nomoreparties.co${actualMovie.image.url}`;
 
   // Обработчик для добавления/удаления из избранного
-  const handleFavoriteToggle = () => {
-    let togglePromise;
-
-    if (isSavedMoviesPath) {
-      togglePromise = Promise.resolve(toggleFavoriteStatus(actualMovie._id));
-    } else {
-      togglePromise = Promise.resolve(toggleFavoriteStatus(actualMovie));
+  const handleFavoriteToggle = async () => {
+    try {
+      if (isSavedMoviesPath) {
+        await toggleFavoriteStatus(actualMovie._id);
+      } else {
+        await toggleFavoriteStatus(actualMovie);
+      }
+    } catch (err) {
+      navigate(`/error?message=${encodeURIComponent(err.message || "Ошибка при изменении избранного")}`);
     }
-
-    togglePromise
-      .then(() => setFavorite(!favorite))
-      .catch((err) => {
-        navigate(
-          `/error?message=${encodeURIComponent(
-            err.message || "Ошибка при изменении избранного"
-          )}`
-        );
-      });
   };
 
   useEffect(() => {
-    const isFavorite =
-      movie.isFavorited ||
-      moviesSaved.some((savedMovie) => savedMovie.movieId === actualMovie.id);
+    const isFavorite = movie.isFavorited || moviesSaved.some(savedMovie => savedMovie.movieId === actualMovie.id);
     setFavorite(isFavorite);
   }, [actualMovie, moviesSaved, movie.isFavorited]);
+
 
   // Конвертация продолжительности фильма в формат "чч мм"
   const durationToHoursAndMinutes = (duration) => {

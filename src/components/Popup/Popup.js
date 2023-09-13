@@ -18,6 +18,10 @@ const Popup = ({ text, isOpen, onClose }) => {
     };
   }, [onClose]);
 
+  //перепроверил в консоли остается ли в памяти 
+//   const eventListeners = getEventListeners(document);
+// console.log(eventListeners.keydown); не увидел ошибки. Не могу понять висит keydown
+
   const handleOverlayClick = (event) => {
     if (event.target === popupRef.current) {
       onClose();
