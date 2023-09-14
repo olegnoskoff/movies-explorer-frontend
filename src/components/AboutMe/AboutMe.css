@@ -1,0 +1,174 @@
+.about {
+  display: flex;
+  flex-direction: column;
+  padding: 70px 14px 0;
+  transition: all 1s linear;
+  background-color: #fafafa;
+}
+
+.about__title,
+.about__profile-text-name,
+.about__profile-text-group,
+.about__profile-text-description,
+.about__profile-text-link {
+  color: #000;
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  margin: 0;
+}
+
+.about__title {
+  font-size: 18px;
+  letter-spacing: -0.72px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid #000;
+}
+
+.about__profile {
+  display: flex;
+  flex-direction: column;
+}
+
+.about__profile-photo {
+  max-width: 292px;
+  height: fit-content;
+  border-radius: 10px;
+  display: flex;
+  margin: 60px auto 40px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.about__profile-text {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+}
+
+.about__profile-text-name {
+  font-size: 30px;
+  line-height: normal;
+  letter-spacing: -1.2px;
+  padding-bottom: 20px;
+}
+
+.about__profile-text-group,
+.about__profile-text-description {
+  font-feature-settings: "clig" off, "liga" off;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+.about__profile-text-group {
+  padding-bottom: 20px;
+}
+
+.about__profile-text-description {
+  padding-bottom: 40px;
+}
+
+.about__profile-text-link {
+  color: #000;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.about__profile-text-link:hover {
+  opacity: 0.7;
+}
+
+@media screen and (min-width: 320px) {
+  .about {
+    padding: 48px 14px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .about {
+    padding: 61px 50px 0;
+  }
+
+  .about__title {
+    font-size: 22px;
+    letter-spacing: -0.88px;
+    padding-bottom: 23px;
+  }
+
+  .about__profile {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    padding-top: 66px;
+  }
+
+  .about__profile-photo {
+    max-width: 255px;
+    margin: 0;
+  }
+
+  .about__profile-text {
+    max-width: 364px;
+  }
+
+  .about__profile-text-name {
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: -1.6px;
+    padding-bottom: 16px;
+  }
+
+  .about__profile-text-group,
+  .about__profile-text-description {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .about__profile-text-description {
+    padding-bottom: 87px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .about {
+    padding: 100px 60px 0;
+  }
+
+  .about__profile-text {
+    max-width: 486px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .about {
+    padding: 77px 70px 0;
+  }
+
+  .about__profile-photo {
+    max-width: 270px;
+  }
+
+  .about__profile-text-name {
+    font-size: 50px;
+    line-height: 58px;
+    letter-spacing: -2px;
+    padding-bottom: 18px;
+  }
+
+  .about__profile-text-group {
+    font-size: 18px;
+    line-height: 20px;
+    padding-bottom: 26px;
+  }
+
+  .about__profile-text-description {
+    font-size: 14px;
+    line-height: 22px;
+    padding-bottom: 100px;
+  }
+
+  .about__profile-text {
+    max-width: 609px;
+  }
+}
